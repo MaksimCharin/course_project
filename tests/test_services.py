@@ -11,7 +11,7 @@ def test_find_transactions_with_phone_numbers():
             'Transaction with phone number +7 123 456-78-90',
             'No phone number here',
             'Another transaction with +71234567890',
-            None,  # NaN value
+            None,
             'Invalid phone number +1 123 456-78-90'
         ]
     }
@@ -36,7 +36,7 @@ def test_no_phone_numbers_found():
         'Описание': [
             'No phone number here',
             'Another without phone number',
-            None  # NaN value
+            None
         ]
     }
     df = pd.DataFrame(data)
@@ -63,8 +63,4 @@ def test_empty_dataframe():
         mock_read_excel.assert_called_once_with('dummy_path.xlsx')
 
 
-if __name__ == '__main__':
-    test_find_transactions_with_phone_numbers()
-    test_no_phone_numbers_found()
-    test_empty_dataframe()
-    print("All tests passed!")
+

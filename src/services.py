@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-import json
 
 def find_transactions_with_phone_numbers(file_path):
     # Чтение данных из Excel файла с указанием движка
