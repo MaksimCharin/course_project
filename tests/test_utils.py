@@ -3,19 +3,30 @@ from unittest.mock import Mock, patch
 from src.utils import get_currency_rates, get_stock_info, get_stock_prices
 
 
-def test_get_currency_rates():
+def test_get_currency_rates() -> None:
     with patch("requests.get") as mock_get:
+        # Мок ответа от API
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"conversion_rates": {"EUR": 0.85, "JPY": 110.0, "GBP": 0.75}}
         mock_get.return_value = mock_response
 
+        # Входные данные
         currencies = ["EUR", "JPY", "GBP"]
-        expected_rates = {"EUR": 0.85, "JPY": 110.0, "GBP": 0.75}
-        assert get_currency_rates(currencies) == expected_rates
+
+        # Ожидаемые значения с учетом преобразования и округления
+        expected_rates = {
+            "EUR": round(1 / 0.85, 2),  # 1.18
+            "JPY": round(1 / 110.0, 2),  # 0.01
+            "GBP": round(1 / 0.75, 2),  # 1.33
+        }
+
+        # Вызов функции и проверка результата
+        result = get_currency_rates(currencies)
+        assert result == expected_rates
 
 
-def test_get_stock_info():
+def test_get_stock_info() -> None:
     with patch("requests.get") as mock_get:
         mock_response = Mock()
         mock_response.status_code = 200
@@ -27,7 +38,7 @@ def test_get_stock_info():
         assert get_stock_info(symbol) == expected_info
 
 
-def test_get_stock_prices():
+def test_get_stock_prices() -> None:
     with patch("requests.get") as mock_get:
         mock_response_search = Mock()
         mock_response_search.status_code = 200
@@ -42,10 +53,3 @@ def test_get_stock_prices():
         stocks = ["AAPL"]
         expected_prices = {"AAPL": 150.0}
         assert get_stock_prices(stocks) == expected_prices
-
-
-if __name__ == "__main__":
-    test_get_currency_rates()
-    test_get_stock_info()
-    test_get_stock_prices()
-    print("Все тесты пройдены успешно!")

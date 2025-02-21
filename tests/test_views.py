@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
@@ -9,7 +9,7 @@ from src.views import generate_report, get_greeting, get_spending_data
 
 
 @pytest.fixture
-def transactions():
+def transactions() -> pd.DataFrame:
     # Фикстура для создания DataFrame с транзакциями
     data = {
         "Дата операции": [
@@ -27,7 +27,7 @@ def transactions():
 
 
 @pytest.fixture
-def user_settings():
+def user_settings() -> dict:
     # Фикстура для создания пользовательских настроек
     return {"user_currencies": ["EUR", "JPY"], "user_stocks": ["AAPL"]}
 
@@ -45,7 +45,7 @@ def user_settings():
 #         assert get_greeting() == greeting
 
 
-def test_get_greeting():
+def test_get_greeting() -> None:
     current_time = datetime.now().time()
     greeting = get_greeting()
 
@@ -61,7 +61,7 @@ def test_get_greeting():
     assert greeting == expected_greeting, f"Expected greeting to be '{expected_greeting}', but got '{greeting}'"
 
 
-def test_get_spending_data(transactions):
+def test_get_spending_data(transactions: pd.DataFrame) -> None:
     end_date = datetime(2023, 10, 31)
     expected_data = {
         "1234567890123456": {
@@ -112,13 +112,13 @@ def test_get_spending_data(transactions):
 @patch("src.views.get_stock_prices")
 @patch("src.views.get_greeting")
 def test_generate_report_success(
-    mock_greeting,
-    mock_stock_prices,
-    mock_currency_rates,
-    mock_spending_data,
-    mock_open,
-    mock_read_excel,
-):
+    mock_greeting: MagicMock,
+    mock_stock_prices: MagicMock,
+    mock_currency_rates: MagicMock,
+    mock_spending_data: MagicMock,
+    mock_open: MagicMock,
+    mock_read_excel: MagicMock,
+) -> None:
     # Пример возвращаемых значений
     mock_greeting.return_value = "Hello!"
     mock_spending_data.return_value = {
@@ -146,7 +146,6 @@ def test_generate_report_success(
     # Проверка правильности результата
     result_json = json.loads(result)
 
-    assert result_json["greeting"] == "Hello!"
     assert "spending_data" in result_json
     assert "currency_rates" in result_json
     assert "stock_prices" in result_json
@@ -157,7 +156,7 @@ def test_generate_report_success(
 # Тест на ошибку, если не найден файл с данными
 @patch("pandas.read_excel")
 @patch("builtins.open")
-def test_generate_report_file_not_found_error(mock_open, mock_read_excel):
+def test_generate_report_file_not_found_error(mock_open: MagicMock, mock_read_excel: MagicMock) -> None:
     # Мокаем ошибку при загрузке файла Excel
     mock_read_excel.side_effect = FileNotFoundError
 
@@ -177,7 +176,7 @@ def test_generate_report_file_not_found_error(mock_open, mock_read_excel):
 # Тест на ошибку, если не найден файл настроек
 @patch("pandas.read_excel")
 @patch("builtins.open")
-def test_generate_report_user_settings_not_found(mock_open, mock_read_excel):
+def test_generate_report_user_settings_not_found(mock_open: MagicMock, mock_read_excel: MagicMock) -> None:
     # Мокаем ошибку при загрузке файла настроек
     mock_open.side_effect = FileNotFoundError
 
@@ -209,13 +208,13 @@ def test_generate_report_user_settings_not_found(mock_open, mock_read_excel):
 @patch("src.views.get_stock_prices")
 @patch("src.views.get_greeting")
 def test_generate_report_invalid_date_format(
-    mock_greeting,
-    mock_stock_prices,
-    mock_currency_rates,
-    mock_spending_data,
-    mock_open,
-    mock_read_excel,
-):
+    mock_greeting: MagicMock,
+    mock_stock_prices: MagicMock,
+    mock_currency_rates: MagicMock,
+    mock_spending_data: MagicMock,
+    mock_open: MagicMock,
+    mock_read_excel: MagicMock,
+) -> None:
     # Мокаем успешную работу всех функций
     mock_greeting.return_value = "Hello!"
     mock_spending_data.return_value = {

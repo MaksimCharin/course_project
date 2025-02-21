@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Callable, Optional
+from typing import Any, Callable
 
 import pandas as pd
 
@@ -10,10 +10,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def report_decorator(filename):
-    def decorator(func: Callable):
+def report_decorator(filename: str) -> Callable[[Callable], Callable]:
+    """Декоратор для сохранения результата функции в JSON-файл."""
+
+    def decorator(func: Callable[..., pd.DataFrame]) -> Callable[..., pd.DataFrame]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
             result = func(*args, **kwargs)
             report_filename = f"../logs/{func.__name__}_report.json"
             result_dict = result.to_dict(orient="records")
@@ -32,11 +34,12 @@ def report_decorator(filename):
 
 
 @report_decorator("../data/operations.xlsx")
-def spending_by_category(file_path: str, category: str, date: Optional[str] = None) -> pd.DataFrame:
+def spending_by_category(file_path: str, category: str, date: datetime | None = None) -> pd.DataFrame:
+    """Функция возвращает траты по заданной категории за последние три месяца"""
     transactions = pd.read_excel(file_path)
 
     transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
-    # Логи с проверкой нескольких первых строк Датафрейма
+
     logger.info(f"Первые несколько строк DataFrame:\n{transactions.head()}")
 
     if date is None:
@@ -46,7 +49,6 @@ def spending_by_category(file_path: str, category: str, date: Optional[str] = No
 
     start_date = date - timedelta(days=90)
 
-    # Логи даты начала и конца периода
     logger.info(f"Дата начала периода: {start_date}")
     logger.info(f"Дата конца периода: {date}")
 
@@ -56,10 +58,8 @@ def spending_by_category(file_path: str, category: str, date: Optional[str] = No
         & (transactions["Дата операции"] <= date)
     ]
 
-    # Логи найденных транзакций
     logger.info(f"Найдено {len(filtered_transactions)} транзакций по категории '{category}' за последние три месяца.")
 
-    # Если не найдено ни одной транзакции
     if filtered_transactions.empty:
         logger.warning(f"Не найдено транзакций по категории '{category}' за последние три месяца.")
 

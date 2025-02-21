@@ -1,12 +1,14 @@
 import json
 from datetime import datetime
+from typing import Any, Dict
 
 import pandas as pd
 
 from src.utils import get_currency_rates, get_stock_prices
 
 
-def get_greeting():
+def get_greeting() -> str:
+    """Возвращает приветствие в зависимости от текущего времени."""
     current_time = datetime.now().time()
     if 5 <= current_time.hour < 12:
         return "Доброе утро"
@@ -18,7 +20,8 @@ def get_greeting():
         return "Доброй ночи"
 
 
-def get_spending_data(transactions, end_date):
+def get_spending_data(transactions: pd.DataFrame, end_date: datetime) -> Dict[str, Dict[str, Any]]:
+    """Возвращает приветствие в зависимости от текущего времени"""
     start_date = end_date.replace(day=1)
     print(f"Filtering transactions from {start_date} to {end_date}")
 
@@ -26,7 +29,7 @@ def get_spending_data(transactions, end_date):
         (transactions["Дата операции"] >= start_date) & (transactions["Дата операции"] <= end_date)
     ]
 
-    card_data = {}
+    card_data: Dict[str, Dict[str, Any]] = {}
 
     filtered_transactions.loc[:, "Номер карты"] = filtered_transactions["Номер карты"].astype(str)
 
@@ -50,7 +53,8 @@ def get_spending_data(transactions, end_date):
     return card_data
 
 
-def generate_report(date_str):
+def generate_report(date_str: str) -> str:
+    """"""
     end_date = pd.to_datetime(date_str, format="%Y-%m-%d %H:%M:%S")
 
     try:
@@ -77,8 +81,7 @@ def generate_report(date_str):
         for transaction in spending_data[card]["top_transactions"]:
             transaction["Дата операции"] = transaction["Дата операции"].strftime("%Y-%m-%d %H:%M:%S")
 
-    response = {
-        "greeting": get_greeting(),
+    response: Dict[str, Any] = {
         "spending_data": spending_data,
         "currency_rates": currency_rates,
         "stock_prices": stock_prices,
@@ -87,6 +90,7 @@ def generate_report(date_str):
     return json.dumps(response, ensure_ascii=False, indent=4)
 
 
-date_str = "2021-12-31 16:44:00"
-response = generate_report(date_str)
-print(response)
+if __name__ == "__main__":
+    date_str = "2021-12-31 16:44:00"
+    response = generate_report(date_str)
+    print(response)

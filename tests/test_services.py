@@ -6,7 +6,7 @@ import pandas as pd
 from src.services import find_transactions_with_phone_numbers
 
 
-def test_find_transactions_with_phone_numbers():
+def test_find_transactions_with_phone_numbers() -> None:
     data = {
         "Описание": [
             "Transaction with phone number +7 123 456-78-90",
@@ -32,7 +32,7 @@ def test_find_transactions_with_phone_numbers():
         mock_read_excel.assert_called_once_with("dummy_path.xlsx")
 
 
-def test_no_phone_numbers_found():
+def test_no_phone_numbers_found() -> None:
     data = {"Описание": ["No phone number here", "Another without phone number", None]}
     df = pd.DataFrame(data)
 
@@ -45,7 +45,7 @@ def test_no_phone_numbers_found():
         mock_read_excel.assert_called_once_with("dummy_path.xlsx")
 
 
-def test_empty_dataframe():
+def test_empty_dataframe() -> None:
     df = pd.DataFrame(columns=["Описание"])
 
     with patch("pandas.read_excel", return_value=df) as mock_read_excel:

@@ -1,4 +1,5 @@
 import json
+from typing import Iterator
 from unittest.mock import MagicMock, mock_open, patch
 
 import pandas as pd
@@ -9,14 +10,14 @@ from src.reports import report_decorator, spending_by_category
 
 # Фикстура для мока pd.read_excel
 @pytest.fixture
-def mock_read_excel():
+def mock_read_excel() -> Iterator:
     with patch("pandas.read_excel") as mock:
         yield mock
 
 
 # Фикстура для мока данных транзакций
 @pytest.fixture
-def mock_transactions_data():
+def mock_transactions_data() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "Дата операции": [
@@ -32,7 +33,7 @@ def mock_transactions_data():
 
 # Фикстура для мока данных без транзакций
 @pytest.fixture
-def mock_no_transactions_data():
+def mock_no_transactions_data() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "Дата операции": ["01.10.2023 12:00:00", "15.10.2023 14:00:00"],
@@ -44,7 +45,9 @@ def mock_no_transactions_data():
 
 # Тест функции spending_by_category
 @patch("builtins.open", new_callable=mock_open)
-def test_spending_by_category(mock_file, mock_read_excel, mock_transactions_data):
+def test_spending_by_category(
+    mock_file: MagicMock, mock_read_excel: MagicMock, mock_transactions_data: MagicMock
+) -> None:
     """Тест функции spending_by_category."""
     # Настройка мока
     mock_read_excel.return_value = mock_transactions_data
@@ -70,7 +73,9 @@ def test_spending_by_category(mock_file, mock_read_excel, mock_transactions_data
 
 # Тест функции spending_by_category, когда транзакции не найдены
 @patch("builtins.open", new_callable=mock_open)
-def test_spending_by_category_no_transactions(mock_file, mock_read_excel, mock_no_transactions_data):
+def test_spending_by_category_no_transactions(
+    mock_file: MagicMock, mock_read_excel: MagicMock, mock_no_transactions_data: MagicMock
+) -> None:
     """Тест функции spending_by_category, когда транзакции не найдены."""
     # Настройка мока
     mock_read_excel.return_value = mock_no_transactions_data
@@ -82,7 +87,7 @@ def test_spending_by_category_no_transactions(mock_file, mock_read_excel, mock_n
     assert result.empty
 
 
-def test_report_decorator():
+def test_report_decorator() -> None:
     mock_func = MagicMock()
     mock_func.__name__ = "mock_func"
     mock_func.return_value = pd.DataFrame({"date": [pd.Timestamp("2023-01-01")], "value": [42]})
