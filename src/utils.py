@@ -1,11 +1,13 @@
 import os
-from dotenv import load_dotenv
+
 import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
 CURRENCY_API_KEY = os.getenv("CURRENCY_API_KEY")
 SHARES_API_KEY = os.getenv("SHARES_API_KEY")
+
 
 # Функция для получения курса валют
 def get_currency_rates(currencies):

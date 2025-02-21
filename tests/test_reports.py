@@ -65,16 +65,12 @@ def test_spending_by_category(mock_file, mock_read_excel, mock_transactions_data
     )
 
     # Проверка результата
-    pd.testing.assert_frame_equal(
-        result.reset_index(drop=True), expected_data.reset_index(drop=True)
-    )
+    pd.testing.assert_frame_equal(result.reset_index(drop=True), expected_data.reset_index(drop=True))
 
 
 # Тест функции spending_by_category, когда транзакции не найдены
 @patch("builtins.open", new_callable=mock_open)
-def test_spending_by_category_no_transactions(
-    mock_file, mock_read_excel, mock_no_transactions_data
-):
+def test_spending_by_category_no_transactions(mock_file, mock_read_excel, mock_no_transactions_data):
     """Тест функции spending_by_category, когда транзакции не найдены."""
     # Настройка мока
     mock_read_excel.return_value = mock_no_transactions_data
@@ -89,9 +85,7 @@ def test_spending_by_category_no_transactions(
 def test_report_decorator():
     mock_func = MagicMock()
     mock_func.__name__ = "mock_func"
-    mock_func.return_value = pd.DataFrame(
-        {"date": [pd.Timestamp("2023-01-01")], "value": [42]}
-    )
+    mock_func.return_value = pd.DataFrame({"date": [pd.Timestamp("2023-01-01")], "value": [42]})
 
     decorated_func = report_decorator("test_report")(mock_func)
 
@@ -100,13 +94,9 @@ def test_report_decorator():
             # Вызываем декорированную функцию
             result = decorated_func()
 
-            mock_open_file.assert_called_once_with(
-                "../logs/mock_func_report.json", "w", encoding="utf-8"
-            )
+            mock_open_file.assert_called_once_with("../logs/mock_func_report.json", "w", encoding="utf-8")
 
-            mock_logger_info.assert_called_once_with(
-                "Отчет сохранен в файл: ../logs/mock_func_report.json"
-            )
+            mock_logger_info.assert_called_once_with("Отчет сохранен в файл: ../logs/mock_func_report.json")
 
             pd.testing.assert_frame_equal(result, mock_func.return_value)
 
@@ -115,7 +105,5 @@ def test_report_decorator():
                 ensure_ascii=False,
                 indent=4,
             )
-            actual_writes = "".join(
-                [call.args[0] for call in mock_open_file().write.call_args_list]
-            )
+            actual_writes = "".join([call.args[0] for call in mock_open_file().write.call_args_list])
             assert actual_writes == expected_json

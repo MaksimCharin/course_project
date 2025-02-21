@@ -32,14 +32,10 @@ def report_decorator(filename):
 
 
 @report_decorator("../data/operations.xlsx")
-def spending_by_category(
-    file_path: str, category: str, date: Optional[str] = None
-) -> pd.DataFrame:
+def spending_by_category(file_path: str, category: str, date: Optional[str] = None) -> pd.DataFrame:
     transactions = pd.read_excel(file_path)
 
-    transactions["Дата операции"] = pd.to_datetime(
-        transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S"
-    )
+    transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
     # Логи с проверкой нескольких первых строк Датафрейма
     logger.info(f"Первые несколько строк DataFrame:\n{transactions.head()}")
 
@@ -61,15 +57,11 @@ def spending_by_category(
     ]
 
     # Логи найденных транзакций
-    logger.info(
-        f"Найдено {len(filtered_transactions)} транзакций по категории '{category}' за последние три месяца."
-    )
+    logger.info(f"Найдено {len(filtered_transactions)} транзакций по категории '{category}' за последние три месяца.")
 
     # Если не найдено ни одной транзакции
     if filtered_transactions.empty:
-        logger.warning(
-            f"Не найдено транзакций по категории '{category}' за последние три месяца."
-        )
+        logger.warning(f"Не найдено транзакций по категории '{category}' за последние три месяца.")
 
     sorted_transactions = filtered_transactions.sort_values(by="Дата операции")
 

@@ -7,9 +7,7 @@ def test_get_currency_rates():
     with patch("requests.get") as mock_get:
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "conversion_rates": {"EUR": 0.85, "JPY": 110.0, "GBP": 0.75}
-        }
+        mock_response.json.return_value = {"conversion_rates": {"EUR": 0.85, "JPY": 110.0, "GBP": 0.75}}
         mock_get.return_value = mock_response
 
         currencies = ["EUR", "JPY", "GBP"]
@@ -21,9 +19,7 @@ def test_get_stock_info():
     with patch("requests.get") as mock_get:
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = [
-            {"symbol": "AAPL", "name": "Apple Inc.", "price": 150.0}
-        ]
+        mock_response.json.return_value = [{"symbol": "AAPL", "name": "Apple Inc.", "price": 150.0}]
         mock_get.return_value = mock_response
 
         symbol = "AAPL"
