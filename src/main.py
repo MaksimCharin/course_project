@@ -1,13 +1,13 @@
+import os
 import time
 
 from src.reports import spending_by_category
 from src.services import find_transactions_with_phone_numbers
 from src.views import generate_report, get_greeting
 
-import os
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FILE_PATH = os.path.join(BASE_DIR, "..", "data", "operations.xlsx")
+
 
 def main() -> None:
     """
