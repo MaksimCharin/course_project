@@ -1,8 +1,9 @@
 from typing import Iterator
-import pytest
 from unittest.mock import patch
 
 import pandas as pd
+import pytest
+
 
 # Фикстура для мока pd.read_excel
 @pytest.fixture
@@ -26,6 +27,7 @@ def mock_transactions_data() -> pd.DataFrame:
         }
     )
 
+
 @pytest.fixture
 def transactions() -> pd.DataFrame:
     # Фикстура для создания DataFrame с транзакциями
@@ -47,6 +49,8 @@ def transactions() -> pd.DataFrame:
 @pytest.fixture
 def user_settings() -> dict:
     return {"user_currencies": ["EUR", "JPY"], "user_stocks": ["AAPL"]}
+
+
 # Фикстура для мока данных без транзакций
 @pytest.fixture
 def mock_no_transactions_data() -> pd.DataFrame:

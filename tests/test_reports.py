@@ -1,10 +1,10 @@
 import json
-
 from unittest.mock import MagicMock, mock_open, patch
 
 import pandas as pd
 
 from src.reports import report_decorator, spending_by_category
+
 
 @patch("builtins.open", new_callable=mock_open)
 def test_spending_by_category(

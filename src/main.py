@@ -56,7 +56,7 @@ def main() -> None:
                 user_date = "31.12.2021"
             try:
                 time.strptime(user_date, "%d.%m.%Y")
-                result = spending_by_category(FILE_PATH, category, user_date)
+                spending_by_category(FILE_PATH, category, user_date)
             except ValueError:
                 print("Ошибка: Некорректный формат даты. Пожалуйста, используйте формат 'ДД.ММ.ГГГГ'.")
 

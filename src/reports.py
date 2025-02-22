@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 def report_decorator(filename: str) -> Callable[[Callable], Callable]:
     """Декоратор для сохранения результата функции в JSON-файл."""
+
     def decorator(func: Callable[..., pd.DataFrame]) -> Callable[..., pd.DataFrame]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
