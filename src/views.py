@@ -54,7 +54,7 @@ def get_spending_data(transactions: pd.DataFrame, end_date: datetime) -> Dict[st
 
 
 def generate_report(date_str: str) -> str:
-    """"""
+    """Функция генерирует отчет о расходах, курсах валют и стоимости акций на указанную дату."""
     end_date = pd.to_datetime(date_str, format="%Y-%m-%d %H:%M:%S")
 
     try:
@@ -91,6 +91,6 @@ def generate_report(date_str: str) -> str:
 
 
 if __name__ == "__main__":
-    date_str = "2021-12-31 16:44:00"
+    date_str = "2021-12-31 00:00:00"
     response = generate_report(date_str)
     print(response)

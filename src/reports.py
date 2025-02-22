@@ -6,6 +6,7 @@ from typing import Any, Callable
 
 import pandas as pd
 
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -58,8 +59,6 @@ def spending_by_category(file_path: str, category: str, date: datetime | None = 
         & (transactions["Дата операции"] <= date)
     ]
 
-    logger.info(f"Найдено {len(filtered_transactions)} транзакций по категории '{category}' за последние три месяца.")
-
     if filtered_transactions.empty:
         logger.warning(f"Не найдено транзакций по категории '{category}' за последние три месяца.")
 
@@ -70,5 +69,5 @@ def spending_by_category(file_path: str, category: str, date: datetime | None = 
 
 if __name__ == "__main__":
     file_path = "../data/operations.xlsx"
-    result = spending_by_category(file_path, "Переводы", "31.12.2021")
+    result = spending_by_category(file_path, "Каршеринг", "31.12.2021")
     print(result)
